@@ -1,0 +1,21 @@
+Requirements:
+- Multi-floor parking lot
+- Configurable Floor count
+- Configurable specific Spot counts
+- 3 Vehicle types: MOTORCYCLE, CAR, TRUCK
+- 3 Spot types: SMALL, MEDIUM, LARGE
+  - MOTORCYCLE can be parked in SMALL spot only
+  - CAR can be parked in MEDIUM spot only
+  - TRUCK can be parked in LARGE spot only
+- Rate per Hour
+  - SMALL spot - 10 Rs
+  - MEDIUM spot - 20 Rs
+  - LARGE spot - 50 Rs
+- Ticket Generation on entry
+  - Block the particular spot
+  - Choose the nearest specific spot
+- Round to nearest hour (ceiling)
+- Multiple payment types
+- Deny entry if specific slot is ful with response - "No available spot for {VehicleType}"
+- After exit, calculate the fare amount, then free up the parking spot
+- Has multi-entry and multi-exit gates
