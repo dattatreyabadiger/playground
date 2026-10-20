@@ -1,46 +1,67 @@
 package parking_lot_two.service;
 
-import parking_lot_two.model.ParkingSpot;
+import parking_lot_two.model.Ticket;
+import parking_lot_two.model.payment.PaymentFactory;
+import parking_lot_two.model.payment.PaymentType;
 import parking_lot_two.model.vehicle.Vehicle;
 import parking_lot_two.model.ParkingLot;
 import parking_lot_two.repository.ParkingLotRepository;
+import parking_lot_two.repository.SpotRateRepository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class ParkingService implements IParkingService {
 
     private final ParkingLotRepository parkingLotRepository;
-    private final Map<Vehicle, ParkingSpot> vehicleToSpotMap;
+    private final SpotRateRepository spotRateRepository;
+    private final PaymentFactory paymentFactory;
+    private final Map<Vehicle, Ticket> vehicleTicketMap;
 
-    public ParkingService(ParkingLotRepository parkingLotRepository) {
+    public ParkingService(ParkingLotRepository parkingLotRepository,
+                          SpotRateRepository spotRateRepository,
+                          PaymentFactory paymentFactory) {
         this.parkingLotRepository = parkingLotRepository;
-        vehicleToSpotMap = new HashMap<>();
+        this.spotRateRepository = spotRateRepository;
+        this.paymentFactory = paymentFactory;
+        this.vehicleTicketMap = new HashMap<>();
     }
 
     @Override
-    public boolean parkVehicle(Vehicle vehicle) {
+    public Ticket parkVehicle(Vehicle vehicle) {
         ParkingLot parkingLot = parkingLotRepository.getParkingLot();
-        Optional<ParkingSpot> assignedSpot = parkingLot.parkVehicle(vehicle);
-        if (assignedSpot.isEmpty())
-            return false;
+        Ticket ticket = new Ticket(vehicle);
 
-        vehicleToSpotMap.put(vehicle, assignedSpot.get());
-        return true;
+        if (!parkingLot.parkVehicle(vehicle))
+            return null;
+
+        vehicleTicketMap.put(vehicle, ticket);
+        return ticket;
     }
 
     @Override
     public boolean unparkVehicle(Vehicle vehicle) {
-        ParkingSpot parkingSpot = vehicleToSpotMap.get(vehicle);
-        if (parkingSpot == null)
+        ParkingLot parkingLot = parkingLotRepository.getParkingLot();
+
+        if (!parkingLot.unparkVehicle(vehicle))
             return false;
 
-        boolean isVehicleUnparked = parkingSpot.unparkVehicle();
-        if (!isVehicleUnparked)
-            return false;
+        Ticket ticket = vehicleTicketMap.get(vehicle);
+        ticket.markExit();
 
-        vehicleToSpotMap.remove(vehicle);
+        vehicleTicketMap.remove(vehicle);
         return true;
+    }
+
+    @Override
+    public int calculateFare(Ticket ticket) {
+        int totalHours = ticket.getTotalHours();
+        return totalHours * spotRateRepository.getRate(ticket.getParkedVehicle()
+                                                             .getSpotType());
+    }
+
+    @Override
+    public void chargeAmount(PaymentType paymentType, int amount) {
+        paymentFactory.chargeAmount(paymentType, amount);
     }
 }

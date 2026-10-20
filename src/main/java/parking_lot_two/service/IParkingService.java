@@ -1,10 +1,16 @@
 package parking_lot_two.service;
 
+import parking_lot_two.model.Ticket;
+import parking_lot_two.model.payment.PaymentType;
 import parking_lot_two.model.vehicle.Vehicle;
 
 public interface IParkingService {
 
-    boolean parkVehicle(Vehicle vehicle);
+    Ticket parkVehicle(Vehicle vehicle);
 
     boolean unparkVehicle(Vehicle vehicle);
+
+    int calculateFare(Ticket ticket);
+
+    void chargeAmount(PaymentType paymentType, int amount);
 }
