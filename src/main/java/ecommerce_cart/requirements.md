@@ -11,4 +11,4 @@ NON-Functional Requirements
 • Check items availability in inventory
 • No reserve on adding item to cart
 • Reserve items on checkout
-• Last item available in inventory - ruled out
+• Last item available in inventory - ignored for the current design

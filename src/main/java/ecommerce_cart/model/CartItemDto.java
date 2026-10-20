@@ -3,14 +3,14 @@ package ecommerce_cart.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
-public class ItemDto {
+public class CartItemDto {
 
     int id;
     String name;
     int quantity;
-    BigInteger price;
+    BigDecimal price;
 }

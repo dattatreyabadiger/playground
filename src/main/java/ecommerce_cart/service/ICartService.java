@@ -1,18 +1,23 @@
 package ecommerce_cart.service;
 
-import ecommerce_cart.model.ItemDto;
+import ecommerce_cart.model.CartItemDto;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
+import java.util.List;
 
 public interface ICartService {
 
     int createCart();
 
-    boolean addItemToCart(int cartId, ItemDto newItem);
+    List<CartItemDto> getCartItems(int cartId);
 
-    boolean removeItemFromCart(int cartId, ItemDto newItem);
+    boolean addItem(int cartId, int itemId);
 
-    void checkoutCart(int cartId);
+    boolean removeItem(int cartId, int itemId);
 
-    BigInteger getTotalPrice(int cartId);
+    boolean updateItemQuantity(int cartId, int itemId, int quantity);
+
+    boolean checkoutCart(int cartId);
+
+    BigDecimal getTotalPrice(int cartId);
 }

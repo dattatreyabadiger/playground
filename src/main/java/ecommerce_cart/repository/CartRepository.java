@@ -1,8 +1,8 @@
 package ecommerce_cart.repository;
 
 import ecommerce_cart.model.CartDto;
+import ecommerce_cart.model.CartItemDto;
 import ecommerce_cart.model.CartStatusEnum;
-import ecommerce_cart.model.ItemDto;
 
 import java.util.List;
 
@@ -14,9 +14,11 @@ public interface CartRepository {
 
     void updateCartStatus(int cartId, CartStatusEnum newCartStatus);
 
-    List<ItemDto> getItems(int cartId);
+    List<CartItemDto> getItems(int cartId);
 
-    void addItemToCart(int cartId, ItemDto newItem);
+    void addItemToCart(int cartId, CartItemDto newItem);
 
-    void removeItemFromCart(int cartId, ItemDto removeItem);
+    void removeItemFromCart(int cartId, int itemId);
+
+    void updateItemQuantity(int cartId, CartItemDto item, int quantity);
 }

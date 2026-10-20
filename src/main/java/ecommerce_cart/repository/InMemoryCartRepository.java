@@ -1,8 +1,9 @@
 package ecommerce_cart.repository;
 
 import ecommerce_cart.model.CartDto;
+import ecommerce_cart.model.CartItemDto;
 import ecommerce_cart.model.CartStatusEnum;
-import ecommerce_cart.model.ItemDto;
+import ecommerce_cart.model.InventoryItemDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,28 +41,44 @@ public class InMemoryCartRepository implements CartRepository {
     }
 
     @Override
-    public List<ItemDto> getItems(int cartId) {
+    public List<CartItemDto> getItems(int cartId) {
         return new ArrayList<>(getCart(cartId).getItems()
                                               .values());
     }
 
     @Override
-    public void addItemToCart(int cartId, ItemDto newItem) {
+    public void addItemToCart(int cartId, CartItemDto newItem) {
         CartDto cart = getCart(cartId);
-        ItemDto existingItems = cart.getItems().get(newItem.getId());
-        if (existingItems == null)
+        CartItemDto existingItems = cart.getItems().get(newItem.getId());
+        if (existingItems == null) {
             cart.getItems().put(newItem.getId(), newItem);
-        else
-            existingItems.setQuantity(existingItems.getQuantity() + newItem.getQuantity());
+            return;
+        }
+
+        // increment the count by 1 for existing item in cart
+        existingItems.setQuantity(existingItems.getQuantity() + 1);
     }
 
     @Override
-    public void removeItemFromCart(int cartId, ItemDto removeItem) {
+    public void removeItemFromCart(int cartId, int itemId) {
         CartDto cart = getCart(cartId);
-        ItemDto existingItems = cart.getItems().get(removeItem.getId());
-        if (existingItems == null)
+        CartItemDto existingItem = cart.getItems().get(itemId);
+        if (existingItem == null)
             return;
 
-        existingItems.setQuantity(existingItems.getQuantity() - removeItem.getQuantity());
+        cart.getItems()
+            .remove(existingItem.getId());
+    }
+
+    @Override
+    public void updateItemQuantity(int cartId, CartItemDto item, int quantity) {
+        CartDto cart = getCart(cartId);
+        CartItemDto existingItem = cart.getItems().get(item.getId());
+        if (existingItem == null) {
+            cart.getItems().put(item.getId(), item);
+            return;
+        }
+
+        existingItem.setQuantity(quantity);
     }
 }
