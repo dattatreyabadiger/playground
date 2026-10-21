@@ -19,7 +19,9 @@ public class ParkingSpot {
         this.id = idGenerator.incrementAndGet();
     }
 
-    public boolean parkVehicle(Vehicle vehicle) {
+    // park and unpark are synchronized so that no vehicles park in same spot
+    // or spot-vehicle clearing during unpark will not race with spot-vehicle assignment during parking
+    public synchronized boolean parkVehicle(Vehicle vehicle) {
         if (this.status != ParkingStatus.AVAILABLE)
             return false;
 
@@ -28,7 +30,7 @@ public class ParkingSpot {
         return true;
     }
 
-    public boolean unparkVehicle() {
+    public synchronized boolean unparkVehicle() {
         if (this.status != ParkingStatus.OCCUPIED)
             return false;
 

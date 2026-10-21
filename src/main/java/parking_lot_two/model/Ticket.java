@@ -1,19 +1,20 @@
 package parking_lot_two.model;
 
 import lombok.Data;
+import lombok.Getter;
 import parking_lot_two.model.vehicle.Vehicle;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Data
+@Getter
 public class Ticket {
 
-    private int id;
-    private Vehicle parkedVehicle;
-    private Instant startTime;
-    private Instant exitTime;
+    private final int id;
+    private final Vehicle parkedVehicle;
+    private final Instant startTime;
+    private volatile Instant exitTime;
 
     private static final AtomicInteger idGenerator = new AtomicInteger();
 

@@ -28,7 +28,7 @@ public class InMemoryParkingLotRepository implements ParkingLotRepository {
 
             parkingLevels.add(new ParkingLevel(parkingSpotMap));
         }
-        this.parkingLot = new ParkingLot(parkingLevels, new HashMap<>());
+        this.parkingLot = new ParkingLot(parkingLevels);
     }
 
     private List<ParkingSpot> creatParkingSpots(SpotType spotType, int spotsCount) {

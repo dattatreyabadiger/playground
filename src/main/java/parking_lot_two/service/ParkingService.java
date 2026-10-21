@@ -8,15 +8,15 @@ import parking_lot_two.model.ParkingLot;
 import parking_lot_two.repository.ParkingLotRepository;
 import parking_lot_two.repository.SpotRateRepository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class ParkingService implements IParkingService {
 
     private final ParkingLotRepository parkingLotRepository;
     private final SpotRateRepository spotRateRepository;
     private final PaymentFactory paymentFactory;
-    private final Map<Vehicle, Ticket> vehicleTicketMap;
+    private final ConcurrentMap<Vehicle, Ticket> vehicleTicketMap;
 
     public ParkingService(ParkingLotRepository parkingLotRepository,
                           SpotRateRepository spotRateRepository,
@@ -24,14 +24,13 @@ public class ParkingService implements IParkingService {
         this.parkingLotRepository = parkingLotRepository;
         this.spotRateRepository = spotRateRepository;
         this.paymentFactory = paymentFactory;
-        this.vehicleTicketMap = new HashMap<>();
+        this.vehicleTicketMap = new ConcurrentHashMap<>();
     }
 
     @Override
     public Ticket parkVehicle(Vehicle vehicle) {
         ParkingLot parkingLot = parkingLotRepository.getParkingLot();
         Ticket ticket = new Ticket(vehicle);
-
         if (!parkingLot.parkVehicle(vehicle))
             return null;
 
@@ -43,12 +42,11 @@ public class ParkingService implements IParkingService {
     public boolean unparkVehicle(Vehicle vehicle) {
         ParkingLot parkingLot = parkingLotRepository.getParkingLot();
 
-        if (!parkingLot.unparkVehicle(vehicle))
+        Ticket ticket = vehicleTicketMap.get(vehicle);
+        if (ticket == null || !parkingLot.unparkVehicle(vehicle))
             return false;
 
-        Ticket ticket = vehicleTicketMap.get(vehicle);
         ticket.markExit();
-
         vehicleTicketMap.remove(vehicle);
         return true;
     }
