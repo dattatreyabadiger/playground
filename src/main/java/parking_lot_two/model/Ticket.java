@@ -6,6 +6,8 @@ import parking_lot_two.model.vehicle.Vehicle;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
@@ -13,19 +15,19 @@ public class Ticket {
 
     private final int id;
     private final Vehicle parkedVehicle;
-    private final Instant startTime;
-    private volatile Instant exitTime;
+    private final LocalDateTime startTime;
+    private volatile LocalDateTime exitTime;
 
     private static final AtomicInteger idGenerator = new AtomicInteger();
 
     public Ticket(Vehicle vehicle) {
         this.id = idGenerator.incrementAndGet();
-        this.startTime = Instant.now();
+        this.startTime = LocalDateTime.now();
         this.parkedVehicle = vehicle;
     }
 
-    public void markExit() {
-        this.exitTime = Instant.now();
+    public void markExit(LocalDateTime localDateTime) {
+        this.exitTime = localDateTime;
     }
 
     public int getTotalHours() {
