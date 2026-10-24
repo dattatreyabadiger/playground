@@ -3,20 +3,18 @@ package library_management;
 import library_management.model.BorrowStatus;
 import library_management.model.ReturnStatus;
 import library_management.model.book.Book;
+import library_management.model.book.BookCopy;
 import library_management.model.member.Member;
 import library_management.model.member.MemberType;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
-public interface ILibraryManagementService {
+public interface ICatalogService {
 
     Book searchBook(String bookName);
 
-    BorrowStatus borrow(int memberId, String bookName);
+    Set<BookCopy> getBookCopies(int bookId);
 
-    BorrowStatus borrow(int memberId, int bookId);
-
-    ReturnStatus submit(int memberId, int bookCopyId, LocalDateTime localDateTime);
-
-    Member createMember(MemberType memberType, String name, int contactNumber);
+    BookCopy getBookCopy(int bookCopyId);
 }
