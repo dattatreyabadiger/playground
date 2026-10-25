@@ -14,6 +14,9 @@ public class Product {
     private static final AtomicInteger idGenerator = new AtomicInteger();
 
     public Product(String name, String details) {
+        if (name == null || name.replaceAll(" +", " ").isEmpty())
+            throw new IllegalArgumentException("Product name must not be blank");
+
         this.id = idGenerator.incrementAndGet();
         this.name = name;
         this.details = details;

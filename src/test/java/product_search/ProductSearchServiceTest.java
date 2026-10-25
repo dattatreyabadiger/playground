@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import product_search.model.Product;
 import product_search.repository.InMemoryProductCatalogRepository;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,26 +18,29 @@ public class ProductSearchServiceTest {
 
     @Test
     public void ProductSearchTest() {
-        productCatalogService.addProduct("Amul Milk", "this is delicious");
-        productCatalogService.addProduct("Milk Milk", "this is delicious");
-        productCatalogService.addProduct("Amul Chocolate Milk", "this is delicious");
+        Product product = productCatalogService.addProduct("Amul Milk  ", "this is delicious");
+        Product product2 = productCatalogService.addProduct("Milk Milk", "this is delicious");
+        Product product3 = productCatalogService.addProduct("Amul   Chocolate Milk", "this is delicious");
 
-        Set<Product> actualResult = productCatalogService.searchProducts("Amul");
-        assertEquals(2, actualResult.size());
+        List<Product> actualResult = productCatalogService.searchProducts("Amul  ");
+        assertEquals(List.of(product, product3), actualResult);
 
-        Set<Product> actualResult2 = productCatalogService.searchProducts("Amul Milk");
-        assertEquals(2, actualResult2.size());
+        List<Product> actualResult2 = productCatalogService.searchProducts("Amul  Milk");
+        assertEquals(List.of(product, product3), actualResult2);
 
-        Set<Product> actualResult3 = productCatalogService.searchProducts("Amul Chocolate Milk");
-        assertEquals(1, actualResult3.size());
+        List<Product> actualResult3 = productCatalogService.searchProducts("Amul  Chocolate Milk");
+        assertEquals(List.of(product3), actualResult3);
 
-        Set<Product> actualResult4 = productCatalogService.searchProducts("Chocolate Milk");
-        assertEquals(1, actualResult4.size());
+        List<Product> actualResult4 = productCatalogService.searchProducts("Chocolate Milk");
+        assertEquals(List.of(product3), actualResult4);
 
-        Set<Product> actualResult5 = productCatalogService.searchProducts("Milk Milk");
-        assertEquals(1, actualResult5.size());
+        List<Product> actualResult5 = productCatalogService.searchProducts("Milk Milk");
+        assertEquals(List.of(product2), actualResult5);
 
-        Set<Product> actualResult6 = productCatalogService.searchProducts("Milk");
-        assertEquals(3, actualResult6.size());
+        List<Product> actualResult6 = productCatalogService.searchProducts("Milk");
+        assertEquals(List.of(product2, product, product3), actualResult6);
+
+        List<Product> actualResult7 = productCatalogService.searchProducts(null);
+        assertEquals(0, actualResult7.size());
     }
 }

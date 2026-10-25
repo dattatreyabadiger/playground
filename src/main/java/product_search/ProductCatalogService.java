@@ -4,6 +4,7 @@ import product_search.model.Product;
 import product_search.repository.ProductCatalogRepository;
 
 
+import java.util.List;
 import java.util.Set;
 
 public class ProductCatalogService implements IProductCatalogService {
@@ -22,7 +23,9 @@ public class ProductCatalogService implements IProductCatalogService {
     }
 
     @Override
-    public Set<Product> searchProducts(String query) {
+    public List<Product> searchProducts(String query) {
+        if (query == null)
+            return List.of();
         return productCatalogRepository.getProducts(query);
     }
 }
