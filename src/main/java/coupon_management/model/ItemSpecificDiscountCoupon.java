@@ -1,7 +1,9 @@
 package coupon_management.model;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ItemSpecificDiscountCoupon extends FlatRateDiscountCoupon {
 
@@ -14,13 +16,19 @@ public class ItemSpecificDiscountCoupon extends FlatRateDiscountCoupon {
 
     @Override
     public BigDecimal getFinalPrice(Cart cart) {
-        boolean isCouponApplicable = cart.getCartItemList()
-                                         .stream()
-                                         .anyMatch(cartItem -> itemsApplicable.contains(cartItem.getId()));
-
-        if (!isCouponApplicable)
-            return cart.getTotalPrice();
         return cart.getTotalPrice()
                    .subtract(BigDecimal.valueOf(this.getFlatRateDiscount()));
+    }
+
+    @Override
+    public boolean isConditionApplicable(Cart cart) {
+        Set<Integer> cartItemIds = cart.getCartItemList()
+                                       .stream()
+                                       .map(CartItem::getId)
+                                       .collect(Collectors.toSet());
+        return cart.getTotalPrice()
+                   .compareTo(this.getCondition()
+                                  .getMinCartValue()) > 0
+                && !Collections.disjoint(cartItemIds, itemsApplicable);
     }
 }

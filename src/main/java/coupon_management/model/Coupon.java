@@ -21,4 +21,9 @@ public class Coupon {
         return new BigDecimal(0);
     }
 
+    public boolean isConditionApplicable(Cart cart) {
+        return cart.getTotalPrice()
+                   .compareTo(this.condition.getMinCartValue()) > 0;
+    }
+
 }

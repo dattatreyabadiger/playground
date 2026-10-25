@@ -4,13 +4,11 @@ import coupon_management.model.Cart;
 import coupon_management.model.Coupon;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 public interface CouponRepository {
 
-    List<Coupon> getApplicable(Cart cart);
+    Set<Coupon> getApplicable(Cart cart);
 
     BigDecimal getFinalPrice(Cart cart, int couponId);
-
-    Coupon getItemSpecificCoupon(int cartItemId);
 }

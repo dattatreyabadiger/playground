@@ -1,12 +1,10 @@
 package coupon_management.service;
 
 import coupon_management.model.Cart;
-import coupon_management.model.CartItem;
 import coupon_management.model.Coupon;
 import coupon_management.repository.CouponRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,18 +18,8 @@ public class CouponManagementService implements ICouponManagementService {
     }
 
     @Override
-    public List<Coupon> getApplicableCoupons(Cart cart) {
-        List<Coupon> applicableCoupons = new ArrayList<>(couponRepository.getApplicable(cart));
-        Set<Integer> cartItemIds = cart.getCartItemList()
-                                       .stream()
-                                       .map(CartItem::getId)
-                                       .collect(Collectors.toSet());
-        for (int cartItemId : cartItemIds) {
-            Coupon itemSpecificCoupon = couponRepository.getItemSpecificCoupon(cartItemId);
-            if (itemSpecificCoupon != null)
-                applicableCoupons.add(itemSpecificCoupon);
-        }
-        return applicableCoupons;
+    public Set<Coupon> getApplicableCoupons(Cart cart) {
+        return couponRepository.getApplicable(cart);
     }
 
     @Override

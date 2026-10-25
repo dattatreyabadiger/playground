@@ -30,15 +30,14 @@ public class CouponManagementServiceTest {
     private final Condition condition2 = new Condition(new BigDecimal(1000));
     private final Coupon coupon2 = new PercentageDiscountCoupon(condition2, 10);
 
-    private final Coupon coupon3 = new ItemSpecificDiscountCoupon(condition2, 10, Set.of(1));
+    private final Coupon coupon3 = new ItemSpecificDiscountCoupon(condition1, 10, Set.of(1));
 
     public CouponManagementServiceTest() {
         Map<Integer, Coupon> coupons = Map.of(coupon1.getId(), coupon1,
                                               coupon2.getId(), coupon2,
                                               coupon3.getId(), coupon3);
-        Map<Integer, Integer> itemSpecificCouponMap = Map.of(1, coupon3.getId());
         this.couponManagementService
-                = new CouponManagementService(new InMemoryCouponRepository(coupons, itemSpecificCouponMap));
+                = new CouponManagementService(new InMemoryCouponRepository(coupons));
     }
 
     @Test
@@ -48,11 +47,11 @@ public class CouponManagementServiceTest {
         CartItem cartItem3 = new CartItem(new BigDecimal(30), 1);
         Cart cart = new Cart(List.of(cartItem1, cartItem2, cartItem3));
 
-        assertEquals(List.of(coupon3), couponManagementService.getApplicableCoupons(cart));
+        assertEquals(Set.of(), couponManagementService.getApplicableCoupons(cart));
 
         CartItem cartItem4 = new CartItem(new BigDecimal(30), 5);
         Cart cart2 = new Cart(List.of(cartItem1, cartItem2, cartItem3, cartItem4));
-        assertEquals(List.of(coupon1, coupon3), couponManagementService.getApplicableCoupons(cart2));
+        assertEquals(Set.of(coupon1, coupon3), couponManagementService.getApplicableCoupons(cart2));
 
         assertEquals(new BigDecimal(200), couponManagementService.getFinalPrice(cart2, coupon1.getId()));
         assertEquals(new BigDecimal(210), couponManagementService.getFinalPrice(cart2, coupon3.getId()));
