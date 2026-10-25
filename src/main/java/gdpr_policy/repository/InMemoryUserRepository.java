@@ -4,11 +4,14 @@ import gdpr_policy.model.User;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -34,28 +37,36 @@ public class InMemoryUserRepository implements UserRepository {
     public synchronized void removeUser(int userId) {
         User user = getUser(userId);
         userMap.remove(userId);
-        lastLoggedInToUserIdsMap.get(user.getLastLoggedAt())
-                                .remove(userId);
+        removeFromInvertedMap(userId, user.getLastLoggedAt());
     }
 
     @Override
     public synchronized void updateLastLoggedAt(int userId, Clock clock) {
         User user = getUser(userId);
+        if (user == null)
+            throw new NoSuchElementException("User Not Found");
         Instant lastLoggedAt = user.getLastLoggedAt();
         // remove user from new instant
-        lastLoggedInToUserIdsMap.get(lastLoggedAt)
-                                .remove(userId);
+        removeFromInvertedMap(userId, lastLoggedAt);
 
         // add user to new instant
         user.setLastLoggedAt(clock.instant());
         addUser(user);
     }
 
+    private void removeFromInvertedMap(int userId, Instant lastLoggedAt) {
+        Set<Integer> userIds = lastLoggedInToUserIdsMap.get(lastLoggedAt);
+        if (userIds == null)
+            return;
+        userIds.remove(userId);
+
+        if (userIds.isEmpty())
+            lastLoggedInToUserIdsMap.remove(lastLoggedAt);
+    }
+
     @Override
-    public synchronized void removeUsers(int unit, ChronoUnit chronoUnit, Clock clock) {
-        Instant thresholdTime = clock.instant()
-                                     .minus(unit, chronoUnit);
-        Set<Integer> expirableUserIds = lastLoggedInToUserIdsMap.headMap(thresholdTime)
+    public synchronized void removeUsers(Instant thresholdTime) {
+        Set<Integer> expirableUserIds = lastLoggedInToUserIdsMap.headMap(thresholdTime, true)
                                                                 .values()
                                                                 .stream()
                                                                 .flatMap(Collection::stream)

@@ -3,6 +3,7 @@ package gdpr_policy.repository;
 import gdpr_policy.model.User;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 public interface UserRepository {
@@ -13,7 +14,7 @@ public interface UserRepository {
 
     void updateLastLoggedAt(int userId, Clock clock);
 
-    void removeUsers(int unit, ChronoUnit chronoUnit, Clock clock);
+    void removeUsers(Instant thresholdTime);
 
     User getUser(int userId);
 }

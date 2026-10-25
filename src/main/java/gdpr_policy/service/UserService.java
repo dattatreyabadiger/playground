@@ -4,6 +4,8 @@ import gdpr_policy.model.User;
 import gdpr_policy.repository.UserRepository;
 
 import java.time.Clock;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class UserService implements IUserService {
@@ -15,7 +17,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User addUser(String name) {
+    public User addUser(String name, Clock clock) {
         User user = new User(name);
         userRepository.addUser(user);
         return user;
@@ -38,6 +40,11 @@ public class UserService implements IUserService {
 
     @Override
     public void removeUsersByTime(int unit, ChronoUnit chronoUnit, Clock clock) {
-        userRepository.removeUsers(unit, chronoUnit, clock);
+        if (unit <= 0)
+            throw new IllegalArgumentException("Time Unit for calculating threshold time should be positive");
+        Instant thresholdTime = ZonedDateTime.now(clock)
+                                             .minus(unit, chronoUnit)
+                                             .toInstant();
+        userRepository.removeUsers(thresholdTime);
     }
 }

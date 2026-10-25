@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,8 +25,8 @@ public class UserServiceTest {
 
     @Test
     public void removeUsersByTimeTest() {
-        User user = userService.addUser("Datt");
-        User user2 = userService.addUser("Rego");
+        User user = userService.addUser("Datt", Clock.systemUTC());
+        User user2 = userService.addUser("Rego", Clock.systemUTC());
 
         // refresh logic for user2
         Instant timeAfter5Days = Instant.now()
@@ -40,8 +41,10 @@ public class UserServiceTest {
         assertNotNull(userService.getUser(user2.getId()));
 
 
-        Instant timeAfter2Month = Instant.now()
-                                         .plus(2, ChronoUnit.MONTHS);
+        Instant timeAfter2Month = ZonedDateTime.now()
+                                               .plus(2, ChronoUnit.MONTHS)
+                                               .toInstant();
         userService.removeUsersByTime(1, ChronoUnit.MONTHS, Clock.fixed(timeAfter2Month, ZoneId.of("UTC")));
+        assertNull(userService.getUser(user2.getId()));
     }
 }

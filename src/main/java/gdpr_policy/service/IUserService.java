@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit;
 
 public interface IUserService {
 
-    User addUser(String name);
+    User addUser(String name, Clock clock);
 
     User getUser(int userId);
 
