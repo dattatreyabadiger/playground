@@ -47,8 +47,9 @@ public class SalesStatsServiceTest {
 
         salesStatsService.incrementSales(product4.getId());
 
-        List<Product> actualTopSellingProducts = salesStatsService.getTopSellingProducts(2);
-        assertEquals(List.of(product1, product3), actualTopSellingProducts);
+        assertEquals(List.of(product1, product3), salesStatsService.getTopSellingProducts(2));
+
+        assertEquals(List.of(product1, product3), salesStatsService.getTopSellingProducts(2));
     }
 
 }
