@@ -11,7 +11,7 @@ public class Product {
     private final String name;
     private final int price;
 
-    private final static AtomicInteger idGenerator = new AtomicInteger();
+    private static final AtomicInteger idGenerator = new AtomicInteger();
 
     public Product(String name, int price) {
         this.id = idGenerator.incrementAndGet();
