@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.stream.Collectors;
 
 public class InMemoryProductInventory implements ProductInventory {
 
@@ -44,7 +42,9 @@ public class InMemoryProductInventory implements ProductInventory {
             productSalesMap.put(productId, productSales);
         } else {
 //            productSalesSortedSet.remove(productSales);
+            productSalesSortedQueue.remove(productSales);
             productSales.incrementSales();
+            productSalesSortedQueue.add(productSales);
 //            productSalesSortedSet.add(productSales);
         }
     }
