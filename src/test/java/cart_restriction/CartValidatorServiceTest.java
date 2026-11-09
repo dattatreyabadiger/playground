@@ -8,7 +8,6 @@ import cart_restriction.repository.InMemoryCartRestrictionRepository;
 import cart_restriction.service.CartValidatorService;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
