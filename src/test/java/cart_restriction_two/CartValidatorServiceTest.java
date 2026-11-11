@@ -1,7 +1,7 @@
 package cart_restriction_two;
 
-import cart_restriction_two.cart_restriction.BulkBuyLimitCategoryRestrictionRule;
-import cart_restriction_two.cart_restriction.BulkBuyLimitRestrictionRule;
+import cart_restriction_two.cart_restriction.MaximumProductQuantityRule;
+import cart_restriction_two.cart_restriction.MinimumProductQuantityRule;
 import cart_restriction_two.cart_restriction.CartRestrictionRule;
 import cart_restriction_two.model.Cart;
 import cart_restriction_two.model.CartItem;
@@ -9,7 +9,6 @@ import cart_restriction_two.model.Category;
 import cart_restriction_two.model.ResultSet;
 import cart_restriction_two.repository.CartRestrictionRepository;
 import cart_restriction_two.repository.InMemoryCartRestrictionRepository;
-import cart_restriction_two.CartValidatorService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -23,15 +22,15 @@ public class CartValidatorServiceTest {
 
     public CartValidatorServiceTest() {
         Map<Integer, CartRestrictionRule> productRules
-                = Map.of(1, new BulkBuyLimitRestrictionRule(1, 10),
-                         2, new BulkBuyLimitRestrictionRule(2, 15),
-                         3, new BulkBuyLimitRestrictionRule(3, 12),
-                         4, new BulkBuyLimitRestrictionRule(4, 10),
-                         5, new BulkBuyLimitRestrictionRule(5, 12));
+                = Map.of(1, new MinimumProductQuantityRule(1, 10),
+                         2, new MinimumProductQuantityRule(2, 15),
+                         3, new MinimumProductQuantityRule(3, 12),
+                         4, new MinimumProductQuantityRule(4, 10),
+                         5, new MinimumProductQuantityRule(5, 12));
         Map<Category, CartRestrictionRule> categoryRules
-                = Map.of(Category.ANTISEPTIC, new BulkBuyLimitCategoryRestrictionRule(Category.ANTISEPTIC, 50),
-                         Category.ANTIVIRAL, new BulkBuyLimitCategoryRestrictionRule(Category.ANTIVIRAL, 50),
-                         Category.PAINKILLER, new BulkBuyLimitCategoryRestrictionRule(Category.PAINKILLER, 50));
+                = Map.of(Category.ANTISEPTIC, new MaximumProductQuantityRule(Category.ANTISEPTIC, 50),
+                         Category.ANTIVIRAL, new MaximumProductQuantityRule(Category.ANTIVIRAL, 50),
+                         Category.PAINKILLER, new MaximumProductQuantityRule(Category.PAINKILLER, 50));
         CartRestrictionRepository cartRestrictionRepository = new InMemoryCartRestrictionRepository(productRules,
                                                                                                     categoryRules);
         this.cartValidatorService = new CartValidatorService(cartRestrictionRepository);

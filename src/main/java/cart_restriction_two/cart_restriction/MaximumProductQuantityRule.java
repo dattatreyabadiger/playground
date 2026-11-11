@@ -5,16 +5,12 @@ import cart_restriction_two.model.CartItem;
 import cart_restriction_two.model.Category;
 import cart_restriction_two.model.ResultSet;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
-public class BulkBuyLimitCategoryRestrictionRule implements CartRestrictionRule {
+public class MaximumProductQuantityRule implements CartRestrictionRule {
 
     private final Category category;
     private final int maxQuantity;
 
-    public BulkBuyLimitCategoryRestrictionRule(Category category, int maxQuantity) {
+    public MaximumProductQuantityRule(Category category, int maxQuantity) {
         this.category = category;
         this.maxQuantity = maxQuantity;
     }

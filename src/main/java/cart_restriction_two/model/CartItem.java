@@ -10,6 +10,9 @@ public class CartItem {
     private final int quantity;
 
     public CartItem(int id, Category category, int quantity) {
+        if (quantity <= 0)
+            throw new IllegalArgumentException("Quantity should be positive");
+
         this.id = id;
         this.category = category;
         this.quantity = quantity;

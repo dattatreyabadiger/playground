@@ -4,12 +4,12 @@ import cart_restriction_two.model.Cart;
 import cart_restriction_two.model.CartItem;
 import cart_restriction_two.model.ResultSet;
 
-public class BulkBuyLimitRestrictionRule implements CartRestrictionRule {
+public class MinimumProductQuantityRule implements CartRestrictionRule {
 
     private final int productId;
     private final int minQuantity;
 
-    public BulkBuyLimitRestrictionRule(int productId, int minQuantity) {
+    public MinimumProductQuantityRule(int productId, int minQuantity) {
         this.productId = productId;
         this.minQuantity = minQuantity;
     }
