@@ -3,7 +3,6 @@ package category_and_products.repository;
 import category_and_products.model.CatalogNode;
 import category_and_products.model.Product;
 
-import java.util.List;
 import java.util.Set;
 
 public interface CatalogRepository {
@@ -12,5 +11,5 @@ public interface CatalogRepository {
 
     Set<Product> getProducts(int categoryId);
 
-    List<List<String>> breadcrumb(int categoryId);
+    String breadcrumb(int categoryId);
 }

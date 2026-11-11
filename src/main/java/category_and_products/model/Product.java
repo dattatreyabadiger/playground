@@ -1,6 +1,5 @@
 package category_and_products.model;
 
-import java.util.Set;
 
 public class Product extends CatalogNode {
 

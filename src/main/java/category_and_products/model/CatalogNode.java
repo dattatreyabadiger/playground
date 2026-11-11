@@ -1,9 +1,7 @@
 package category_and_products.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
 @Getter
 public abstract class CatalogNode {
 
@@ -14,5 +12,9 @@ public abstract class CatalogNode {
     protected CatalogNode(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    protected void setParent(Category parent) {
+        this.parent = parent;
     }
 }

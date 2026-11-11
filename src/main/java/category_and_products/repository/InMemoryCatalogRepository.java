@@ -5,6 +5,7 @@ import category_and_products.model.Category;
 import category_and_products.model.Product;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,14 +23,25 @@ public class InMemoryCatalogRepository implements CatalogRepository {
     @Override
     public void addNode(int parentId, CatalogNode node) {
         CatalogNode existingParentCatalogNode = catalog.get(parentId);
-        catalog.put(node.getId(), node);
         if (existingParentCatalogNode == null) {
+            catalog.put(node.getId(), node);
             // root itself is getting added
             return;
         }
-        if (existingParentCatalogNode instanceof Category) {
-            ((Category) existingParentCatalogNode).add(node);
+        validateNodeAddition(node, existingParentCatalogNode);
+
+        if (existingParentCatalogNode instanceof Category parentCategory) {
+            parentCategory.add(node);
+            catalog.put(node.getId(), node);
         }
+    }
+
+    private void validateNodeAddition(CatalogNode node, CatalogNode existingParentCatalogNode) {
+        if (catalog.containsKey(node.getId()))
+            throw new IllegalArgumentException("Node ID already exists: " + node.getId());
+
+        if (existingParentCatalogNode instanceof Product)
+            throw new IllegalArgumentException("Parent cannot be a product");
     }
 
     @Override
@@ -44,23 +56,19 @@ public class InMemoryCatalogRepository implements CatalogRepository {
     }
 
     @Override
-    public List<List<String>> breadcrumb(int categoryId) {
+    public String breadcrumb(int categoryId) {
         CatalogNode node = catalog.get(categoryId);
         if (node == null)
             throw new IllegalArgumentException("Invalid categoryId");
 
-        CatalogNode parent = node;
+        List<String> paths = new ArrayList<>();
         // find the root
         while (node != null) {
-            parent = node;
+            paths.add(node.getName());
             node = node.getParent();
         }
-
-        List<List<String>> res = new ArrayList<>();
-        List<String> path = new ArrayList<>();
-        path.add(parent.getName());
-        dfs(parent, path, res);
-        return res;
+        Collections.reverse(paths);
+        return String.join(" -> ", paths);
     }
 
     private void collect(CatalogNode node, Set<Product> out) {

@@ -4,7 +4,6 @@ import category_and_products.model.CatalogNode;
 import category_and_products.model.Product;
 import category_and_products.repository.CatalogRepository;
 
-import java.util.List;
 import java.util.Set;
 
 
@@ -16,7 +15,7 @@ public class CatalogService {
         this.catalogRepository = catalogRepository;
     }
 
-    public void addProducts(int parentId, CatalogNode node) {
+    public void addNode(int parentId, CatalogNode node) {
         catalogRepository.addNode(parentId, node);
     }
 
@@ -24,7 +23,7 @@ public class CatalogService {
         return catalogRepository.getProducts(categoryId);
     }
 
-    public List<List<String>> breadcrumb(int categoryId) {
+    public String breadcrumb(int categoryId) {
         return catalogRepository.breadcrumb(categoryId);
     }
 }
