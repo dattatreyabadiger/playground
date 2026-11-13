@@ -11,20 +11,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InMemoryPaymentRepository implements PaymentRepository {
 
     private final Map<Integer, Map<Integer, Integer>> orderIdToAttemptsInfo;
-    private final Map<Integer, Integer> orderIdToPaymentInfoMap;
+    private final Map<Integer, Integer> orderIdToPaymentIdMap;
     private final Map<Integer, PaymentInfo> paymentIdToPaymentInfoMap;
 
     private final AtomicInteger paymentIdGenerator = new AtomicInteger();
 
     public InMemoryPaymentRepository() {
         this.orderIdToAttemptsInfo = new HashMap<>();
-        this.orderIdToPaymentInfoMap = new HashMap<>();
+        this.orderIdToPaymentIdMap = new HashMap<>();
         this.paymentIdToPaymentInfoMap = new HashMap<>();
     }
 
     @Override
     public PaymentInfo findByOrderId(int orderId) {
-        Integer paymentId = orderIdToPaymentInfoMap.get(orderId);
+        Integer paymentId = orderIdToPaymentIdMap.get(orderId);
         if (paymentId == null)
             return null;
         return findByPaymentId(paymentId);
@@ -48,7 +48,7 @@ public class InMemoryPaymentRepository implements PaymentRepository {
     public int save(PaymentRequest paymentRequest, PaymentStatus paymentStatus) {
         PaymentInfo newPaymentInfo = createPayment(paymentRequest,
                                                    paymentStatus);
-        orderIdToPaymentInfoMap.put(newPaymentInfo.getOrderId(), newPaymentInfo.getPaymentId());
+        orderIdToPaymentIdMap.put(newPaymentInfo.getOrderId(), newPaymentInfo.getPaymentId());
         orderIdToAttemptsInfo.computeIfAbsent(newPaymentInfo.getOrderId(), k -> new HashMap<>())
                              .put(newPaymentInfo.getIdempotentKey(), newPaymentInfo.getPaymentId());
         paymentIdToPaymentInfoMap.put(newPaymentInfo.getPaymentId(), newPaymentInfo);

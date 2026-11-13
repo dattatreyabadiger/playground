@@ -5,12 +5,12 @@ import cart_restriction_two.model.CartItem;
 import cart_restriction_two.model.Category;
 import cart_restriction_two.model.ResultSet;
 
-public class MaximumProductQuantityRule implements CartRestrictionRule {
+public class MaximumProductCategoryQuantityRule implements CartRestrictionRule {
 
     private final Category category;
     private final int maxQuantity;
 
-    public MaximumProductQuantityRule(Category category, int maxQuantity) {
+    public MaximumProductCategoryQuantityRule(Category category, int maxQuantity) {
         this.category = category;
         this.maxQuantity = maxQuantity;
     }

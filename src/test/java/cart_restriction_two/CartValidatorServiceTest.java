@@ -1,6 +1,6 @@
 package cart_restriction_two;
 
-import cart_restriction_two.cart_restriction.MaximumProductQuantityRule;
+import cart_restriction_two.cart_restriction.MaximumProductCategoryQuantityRule;
 import cart_restriction_two.cart_restriction.MinimumProductQuantityRule;
 import cart_restriction_two.cart_restriction.CartRestrictionRule;
 import cart_restriction_two.model.Cart;
@@ -28,9 +28,9 @@ public class CartValidatorServiceTest {
                          4, new MinimumProductQuantityRule(4, 10),
                          5, new MinimumProductQuantityRule(5, 12));
         Map<Category, CartRestrictionRule> categoryRules
-                = Map.of(Category.ANTISEPTIC, new MaximumProductQuantityRule(Category.ANTISEPTIC, 50),
-                         Category.ANTIVIRAL, new MaximumProductQuantityRule(Category.ANTIVIRAL, 50),
-                         Category.PAINKILLER, new MaximumProductQuantityRule(Category.PAINKILLER, 50));
+                = Map.of(Category.ANTISEPTIC, new MaximumProductCategoryQuantityRule(Category.ANTISEPTIC, 50),
+                         Category.ANTIVIRAL, new MaximumProductCategoryQuantityRule(Category.ANTIVIRAL, 50),
+                         Category.PAINKILLER, new MaximumProductCategoryQuantityRule(Category.PAINKILLER, 50));
         CartRestrictionRepository cartRestrictionRepository = new InMemoryCartRestrictionRepository(productRules,
                                                                                                     categoryRules);
         this.cartValidatorService = new CartValidatorService(cartRestrictionRepository);

@@ -6,7 +6,6 @@ import payment_gateway.model.PaymentMethod;
 import payment_gateway.model.PaymentRequest;
 import payment_gateway.model.PaymentStatus;
 import payment_gateway.model.ProviderResult;
-import payment_gateway.payment_providers.FakePaymentProvider;
 import payment_gateway.payment_providers.PaymentProvider;
 import payment_gateway.repository.InMemoryPaymentProviderRepository;
 import payment_gateway.repository.InMemoryPaymentRepository;
@@ -19,6 +18,9 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PaymentGatewayServiceTest {
 
@@ -35,9 +37,13 @@ public class PaymentGatewayServiceTest {
     }
 
     private static Map<PaymentMethod, Set<PaymentProvider>> getPaymentMethodSetMap() {
-        PaymentProvider provider1 = new FakePaymentProvider(ProviderResult.SUCCESS);
-        PaymentProvider provider2 = new FakePaymentProvider(ProviderResult.TIMED_OUT);
-        PaymentProvider provider3 = new FakePaymentProvider(ProviderResult.DECLINED);
+        PaymentProvider provider1 = mock(PaymentProvider.class);
+        when(provider1.charge(anyInt())).thenReturn(ProviderResult.SUCCESS);
+
+        PaymentProvider provider2 = mock(PaymentProvider.class);
+        when(provider2.charge(anyInt())).thenReturn(ProviderResult.TIMED_OUT);
+        PaymentProvider provider3 = mock(PaymentProvider.class);
+        when(provider3.charge(anyInt())).thenReturn(ProviderResult.DECLINED);
 
         return Map.of(PaymentMethod.CARD, Set.of(provider1, provider3),
                       PaymentMethod.UPI, Set.of(provider3),
